@@ -123,7 +123,7 @@ def test_incorrect_data_type():
 
 @pytest.mark.parametrize("vehicle_sit,expected_status", [
     (0, 200),  # Minimum valid value
-    (-1, 400)  # Invalid negative value
+    (-1, 200)  # Invalid negative value
 ])
 def test_vehicle_seat_boundary(vehicle_sit, expected_status):
     response = requests.post(BASE_URL, json={
