@@ -1,0 +1,5 @@
+accident_id,vehicle_seat,weather,gender,year,birth_year,security_used,hour,luminosity,department,in_agglomeration,collision_type,road_type,pathways_width,vehicle_type,obstacle_type,shock_location,maneuver_type
+201600000263,2.0,1,1.0,16,1994.0,1.0,8.75,1.0,620,2.0,6.0,3.0,34.0,7.0,4.0,3.0,1.0
+201600000279,1.0,5,1.0,16,1982.0,2.0,6.0,5.0,620,2.0,6.0,3.0,0.0,7.0,6.0,9.0,2.0
+201600000002,1.0,15,1.0,16,0.0,1.0,14.75,1.0,0,2.0,20.0,20.0,0.0,2.0,7.0,7.0,15.0
+201600000002,5.0,1,2.0,16,1960.0,1.0,18.0,1.0,590,2.0,6.0,3.0,58.0,7.0,6.0,1.0,1.0
