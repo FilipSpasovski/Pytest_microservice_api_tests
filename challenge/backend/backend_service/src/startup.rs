@@ -59,7 +59,7 @@ pub fn run(listener: TcpListener) -> Result<Server, std::io::Error> {
     let server = HttpServer::new(move || {
         App::new()
             .wrap(TracingLogger::default())
-            .wrap(ErrorHandlers::new().handler(http::StatusCode::BAD_REQUEST, render))
+            //.wrap(ErrorHandlers::new().handler(http::StatusCode::BAD_REQUEST, render))
             .wrap(ErrorHandlers::new().handler(http::StatusCode::FORBIDDEN, render))
             .wrap(ErrorHandlers::new().handler(http::StatusCode::NOT_FOUND, render))
             .wrap(ErrorHandlers::new().handler(http::StatusCode::UNPROCESSABLE_ENTITY, render))
