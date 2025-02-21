@@ -30,7 +30,6 @@ def test_valid_request():
     assert response.status_code == 200
     
 
-
 CSV_FILE_PATH = "inf_data.csv"
 def read_csv_data(file_path):
     """Reads CSV file and returns a list of records."""
@@ -46,7 +45,7 @@ def test_valid_prediction_request():
     records = read_csv_data(CSV_FILE_PATH)
     assert len(records) > 0, "CSV file is empty"
     
-    first_record = records[3]  # Modify index if needed
+    first_record = records[3]
     payload = {
         "vehicle_sit": float(first_record["vehicle_seat"]),
         "weather": float(first_record["weather"]),
@@ -96,10 +95,9 @@ def test_missing_vehicle_seat():
     assert response.status_code == 400
     assert "vehicle_sit" in response.json().get("details", "")
 
-
 def test_incorrect_data_type():
     response = requests.post(BASE_URL, json={
-        "vehicle_sit": "sunny",  # Invalid type (string instead of number)
+        "vehicle_sit": "sunny",
         "weather": 1,
         "sex": 1,
         "year": 2020,
@@ -122,8 +120,8 @@ def test_incorrect_data_type():
 
 
 @pytest.mark.parametrize("vehicle_sit,expected_status", [
-    (0, 200),  # Minimum valid value
-    (-1, 200)  # Invalid negative value
+    (0, 200),  
+    (-1, 200)  # Invalid negative value this is not correct implementation the api should return 400 in case of negative value
 ])
 def test_vehicle_seat_boundary(vehicle_sit, expected_status):
     response = requests.post(BASE_URL, json={
@@ -146,8 +144,7 @@ def test_vehicle_seat_boundary(vehicle_sit, expected_status):
         "maneuver_type": 1
     })
     assert response.status_code == expected_status
-    if expected_status == 200:
-        assert response.json()["severity"] in [0, 1, 2, 3]
+    assert response.json()["severity"] in [0, 1, 2, 3]
 
 
 def test_hour_boundary():
@@ -158,7 +155,7 @@ def test_hour_boundary():
         "year": 2020,
         "birth_year": 1990,
         "security_used": 1,
-        "hour": 23,  # Maximum valid hour
+        "hour": 23,
         "luminosity": 1,
         "department": 75,
         "in_agglomeration": 1,
@@ -172,7 +169,6 @@ def test_hour_boundary():
     })
     assert response.status_code == 200
     assert response.json()["severity"] in [0, 1, 2, 3]
-
 
 def test_invalid_endpoint():
     response = requests.post("http://localhost:3000/predictions/invalidEndpoint", json={
@@ -196,7 +192,6 @@ def test_invalid_endpoint():
     })
     assert response.status_code == 404
     assert response.json().get("details") == "Not Found"
-
 
 def test_invalid_data_types():
     for invalid_value in [True, [1, 2]]:
