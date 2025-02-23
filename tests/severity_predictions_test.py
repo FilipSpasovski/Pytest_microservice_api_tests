@@ -215,3 +215,45 @@ def test_invalid_data_types():
             "maneuver_type": 1
         })
         assert response.status_code != 200
+
+def test_empty_payload():
+    response = requests.post(BASE_URL, json={})
+    assert response.status_code == 400
+    assert "details" in response.json()
+
+def test_missing_required_fields():
+    payload = {
+        "weather": 1,
+        "sex": 1,
+        "year": 2020,
+        "birth_year": 1990,
+        "security_used": 1,
+        "hour": 12,
+        "luminosity": 1,
+        "department": 75,
+        "in_agglomeration": 1,
+        "collision_type": 1,
+        "road_type": 1,
+        "pathways_width": 3.5,
+        "vehicle_type": 2,
+        "obstacle_type": 1,
+        "shock_location": 2,
+        "maneuver_type": 1
+    }
+    
+    response = requests.post(BASE_URL, json=payload)
+    assert response.status_code == 400
+    assert "vehicle_sit" in response.json()["details"]
+
+def test_invalid_http_method_get():
+    response = requests.get(BASE_URL, json={})
+    assert response.status_code == 404
+
+def test_invalid_http_method_put():
+    response = requests.put(BASE_URL, json={})
+    assert response.status_code == 404
+
+def test_invalid_http_method_delete():
+    response = requests.delete(BASE_URL, json={})
+    assert response.status_code == 404
+    
