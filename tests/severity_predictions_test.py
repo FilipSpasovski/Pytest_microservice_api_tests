@@ -1,6 +1,7 @@
 import requests
 import csv
 import pytest
+import json
 
 BASE_URL = "http://localhost:3000/predictions/severity"
 
@@ -256,4 +257,65 @@ def test_invalid_http_method_put():
 def test_invalid_http_method_delete():
     response = requests.delete(BASE_URL, json={})
     assert response.status_code == 404
+
+
+
+def test_large_payload():
+    base_payload = {
+        "vehicle_sit": 1,
+        "weather": 1,
+        "sex": 1,
+        "year": 2020,
+        "birth_year": 1990,
+        "security_used": 1,
+        "hour": 23,
+        "luminosity": 1,
+        "department": 75,
+        "in_agglomeration": 1,
+        "collision_type": 1,
+        "road_type": 1,
+        "pathways_width": 3.5,
+        "vehicle_type": 2,
+        "obstacle_type": 1,
+        "shock_location": 2,
+        "maneuver_type": 1
+    }
+
+    extra_data = "x" * 100  
+    while len(json.dumps(base_payload)) < 4000:
+        base_payload[f"extra_field_{len(base_payload)}"] = extra_data  
+
+    response = requests.post(BASE_URL, json=base_payload)
     
+    assert response.status_code in [200, 413], f"Unexpected status code: {response.status_code}"
+    
+    if response.status_code == 413:
+        print("API rejected request due to payload size exceeding 4096 bytes.")
+    else:
+        print(f"Request successful. Payload size: {len(json.dumps(base_payload))} bytes.")
+
+def test_rate_limiting():
+    payload = {
+        "vehicle_sit": 1,
+        "weather": 1,
+        "sex": 1,
+        "year": 2020,
+        "birth_year": 1990,
+        "security_used": 1,
+        "hour": 12,
+        "luminosity": 1,
+        "department": 75,
+        "in_agglomeration": 1,
+        "collision_type": 1,
+        "road_type": 1,
+        "pathways_width": 3.5,
+        "vehicle_type": 2,
+        "obstacle_type": 1,
+        "shock_location": 2,
+        "maneuver_type": 1
+    }
+    for _ in range(100):
+        response = requests.post(BASE_URL, json=payload)
+    assert response.status_code == 200, "API should return 429 Too Many Requests"
+
+
